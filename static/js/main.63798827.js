@@ -10765,7 +10765,9 @@
       t
         .createRoot(document.getElementById('root'))
         .render((0, a.jsx)(e.StrictMode, { children: (0, a.jsx)(be, {}) })),
-        document.addEventListener('touchmove', (e) => e.preventDefault);
+        document.addEventListener('touchmove', (e) => e.preventDefault, {
+          passive: false,
+        });
     })();
 })();
 //# sourceMappingURL=main.63798827.js.map
