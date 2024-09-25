@@ -11,7 +11,9 @@ export default function CountrySelector({
   onChange,
 }: CountrySelectorProps) {
   function buildCountrySelector() {
-    return Object.entries(translations).map(buildCountryItem);
+    return Object.entries(translations)
+      .sort(([, a], [, b]) => (a.country < b.country ? -1 : 1))
+      .map(buildCountryItem);
   }
 
   function buildCountryItem([shortCountry, countryData]: [

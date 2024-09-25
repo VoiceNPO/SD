@@ -1,4 +1,4 @@
-/*! For license information please see main.b22588cc.js.LICENSE.txt */
+/*! For license information please see main.b8762fec.js.LICENSE.txt */
 (() => {
   var e = {
       497: (e, t, n) => {
@@ -10450,7 +10450,13 @@
             children: n.country,
           });
         }
-        const u = Object.entries(ie).map(o);
+        const u = Object.entries(ie)
+          .sort((e, t) => {
+            let [, n] = e,
+              [, r] = t;
+            return n.country < r.country ? -1 : 1;
+          })
+          .map(o);
         return (0, a.jsx)('div', { id: 'country-selector', children: u });
       }
       function ue(t) {
@@ -10771,4 +10777,4 @@
         });
     })();
 })();
-//# sourceMappingURL=main.b22588cc.js.map
+//# sourceMappingURL=main.b8762fec.js.map
