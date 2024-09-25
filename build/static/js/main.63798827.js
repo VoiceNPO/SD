@@ -1,4 +1,4 @@
-/*! For license information please see main.ba36bf97.js.LICENSE.txt */
+/*! For license information please see main.63798827.js.LICENSE.txt */
 (() => {
   var e = {
       497: (e, t, n) => {
@@ -10762,9 +10762,10 @@
           ],
         });
       }
-      t.createRoot(document.getElementById('root')).render(
-        (0, a.jsx)(e.StrictMode, { children: (0, a.jsx)(be, {}) })
-      );
+      t
+        .createRoot(document.getElementById('root'))
+        .render((0, a.jsx)(e.StrictMode, { children: (0, a.jsx)(be, {}) })),
+        document.addEventListener('touchmove', (e) => e.preventDefault);
     })();
 })();
-//# sourceMappingURL=main.ba36bf97.js.map
+//# sourceMappingURL=main.63798827.js.map

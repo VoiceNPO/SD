@@ -12,3 +12,5 @@ root.render(
     <App />
   </React.StrictMode>
 );
+
+document.addEventListener('touchmove', (e) => e.preventDefault);
