@@ -1,0 +1,28 @@
+import translations, { localization } from '../../translations/translations';
+import './country-selector.css';
+
+interface CountrySelectorProps {
+  localization: localization;
+  onChange: (country: keyof typeof translations) => void;
+}
+
+export default function CountrySelector({
+  localization: { test_date, registration_num, handler_address, handler_phone },
+  onChange,
+}: CountrySelectorProps) {
+  function buildCountrySelector() {
+    return Object.entries(translations).map(buildCountryItem);
+  }
+
+  function buildCountryItem([shortCountry, countryData]: [
+    keyof typeof translations,
+    localization
+  ]) {
+    return (
+      <div onClick={() => onChange(shortCountry)}>{countryData.country}</div>
+    );
+  }
+
+  const countriesSelector = buildCountrySelector();
+  return <div id="country-selector">{countriesSelector}</div>;
+}
