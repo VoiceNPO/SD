@@ -10619,7 +10619,7 @@
           className: 'slider-content',
           children: (0, a.jsx)('img', {
             id: 'org-logo',
-            src: '/images/little-angels-service-dogs.png',
+            src: 'images/little-angels-service-dogs.png',
             alt: '',
             width: '100%',
           }),
