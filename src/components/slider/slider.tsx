@@ -22,6 +22,10 @@ export default function Slider({ children }: SliderProps) {
   let startLeft = 0;
   let targetLeft = 0;
   let targetIndex = 0;
+  let lastPageX = 0;
+  let lastMoveEvent = 0;
+  let inertia = 0;
+  let currentPage = 0;
 
   const sliderRef = useRef<HTMLDivElement>(null);
   const pagenumsRef = useRef<HTMLDivElement>(null);
@@ -32,25 +36,34 @@ export default function Slider({ children }: SliderProps) {
     return 0.5 * (Math.sin((k - 0.5) * Math.PI) + 1);
   }
 
-  function storeScrollSettings() {
+  function storeScrollSettings(offset: number = 0) {
     if (easeStart) return;
 
     easeStart = Date.now();
     startLeft = parseInt(sliderRef.current!.style.left) || 0;
-    targetIndex = Math.round(Math.abs(startLeft / sliderWidth));
+    if (offset === 0) {
+      targetIndex = Math.round(Math.abs(startLeft / sliderWidth));
+    } else {
+      targetIndex = currentPage + offset;
+    }
+
+    if (targetIndex < 0) targetIndex = 0;
+    if (targetIndex > numChildren - 1) targetIndex = numChildren - 1;
+
     targetLeft = -targetIndex * sliderWidth;
     setActivePageNum(targetIndex);
   }
 
   function setActivePageNum(index: number) {
+    currentPage = index;
     const pageNodes = Array.from(pagenumsRef.current!.children);
 
     pageNodes.forEach((page) => page.classList.remove('active'));
     pageNodes[index].classList.add('active');
   }
 
-  function scrollToNearestPage() {
-    storeScrollSettings();
+  function scrollToNearestPage(offset: number = 0) {
+    storeScrollSettings(offset);
 
     const now = Date.now();
     let elapsed = now - easeStart!;
@@ -62,7 +75,7 @@ export default function Slider({ children }: SliderProps) {
     setSlider(startLeft + (targetLeft - startLeft) * easePosition);
 
     if (elapsed < easeDuration) {
-      requestAnimationFrame(scrollToNearestPage);
+      requestAnimationFrame(() => scrollToNearestPage());
     } else {
       sliderLeft = targetLeft;
       easeStart = 0;
@@ -97,7 +110,22 @@ export default function Slider({ children }: SliderProps) {
     maxSlide = -children.length * sliderWidth;
   }
 
+  const calculateInertia = (pageX: number) => {
+    const now = Date.now();
+
+    if (lastPageX) {
+      const xOffset = pageX - lastPageX;
+      const tOffset = now - lastMoveEvent;
+      inertia = xOffset / tOffset;
+    }
+
+    lastPageX = pageX;
+    lastMoveEvent = now;
+  };
+
   const touchStart = (ev: React.TouchEvent | React.MouseEvent) => {
+    ev.preventDefault();
+
     touchStartPageX = getPageX(ev);
     storeSliderWidth();
   };
@@ -105,15 +133,21 @@ export default function Slider({ children }: SliderProps) {
   const touchMove = (ev: React.TouchEvent | React.MouseEvent) => {
     if (!touchStartPageX) return;
 
-    ev.preventDefault();
-    ev.stopPropagation();
+    ev.nativeEvent.preventDefault();
+    ev.nativeEvent.stopPropagation();
 
     const curPageX = getPageX(ev);
     setSlider(pageMult * curPageX - touchStartPageX + sliderLeft);
+
+    calculateInertia(curPageX);
   };
 
   const touchEnd = (ev: React.TouchEvent | React.MouseEvent) => {
-    scrollToNearestPage();
+    if (Math.abs(inertia) > 1) {
+      scrollToNearestPage(inertia < 0 ? 1 : -1);
+    } else {
+      scrollToNearestPage();
+    }
 
     touchStartPageX = 0;
   };
