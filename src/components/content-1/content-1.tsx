@@ -21,7 +21,7 @@ export default function Content1({
           <h3>Dec 10, {expirationYear}</h3>
         </div>
       </div>
-      {/* <h1>Little Angels Service Dogs</h1> */}
+      <h1>Little Angels Service Dogs</h1>
       <h3>{license}</h3>
       <h2>{handler_name}</h2>
       <h3>Mark Kahn</h3>
